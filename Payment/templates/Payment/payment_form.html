@@ -1,0 +1,117 @@
+<!-- payment_form.html
+<form method="post">
+    {% csrf_token %}
+    
+    {% if messages %}
+    <div class="alert alert-danger">
+        {% for message in messages %}
+        <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <div>
+        <label>Email:</label>
+        <input type="email" name="email" required value="{{ request.POST.email }}">
+    </div>
+    
+    <div>
+        <label>Amount (NGN):</label>
+        <input type="hidden" name="amount" value="{{ default_amount }}" min="0.01" step="0.01" required>
+    </div>
+    
+    <div>
+        <label>Product Name:</label>
+        <input type="hidden" name="name" required value="{{ request.POST.default_name }}">
+    </div>
+    
+    <div>
+        <label>Delivery Address:</label>
+        <input type="text" name="address" required value="{{ request.POST.address }}">
+    </div>
+    
+    <div>
+        <label>Phone Number:</label>
+        <input type="tel" name="phone" required value="{{ request.POST.phone }}">
+    </div>
+    
+    <button type="submit">Proceed to Payment</button>
+</form> -->
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+   
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    <title>Page title</title>
+</head>
+<body>
+  <style>
+    body{
+      text-align: center;
+      font-size:15px;
+    }
+    img{
+      width:30%;
+    }
+    
+  </style>
+  
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  
+  <h1>Order Summary</h1>
+<img src='{{product.image.url}}'> <br/> 
+  {{product.description}} <br/> 
+  {{product.price}}
+  <br/>
+  
+  <br/><br/>
+    <form method="POST">
+      {% csrf_token %}
+     
+  <div class="mb-3">
+    <label for="exampleInputEmail1" class="form-label">Email</label>
+    <input type="email" class="form-control"  name="email"  value="{{ request.POST.email }}" required>
+    <br/>
+    <div class="mb-3">
+    <label for="exampleInputEmail1" class="form-label">Amount</label>
+    <input type="" class="form-control"  name="amount"  value="{{ default_amount }}" min="0.01" step="0.01" readonly>
+    <br/>
+    <div class="mb-3">
+    <label for="exampleInputEmail1" class="form-label">Delivery Address</label>
+    <input type="text" class="form-control"  name="address"  value="{{ request.POST.address }}" required>
+    
+    <br/>
+    <div class="mb-3">
+    <label for="exampleInputEmail1" class="form-label">Phone Number</label>
+    <input type="tel" class="form-control"  name="phone"  value="{{ request.POST.phone }}" required>
+    
+
+ <!-- </div>
+  <div class="mb-3">
+    <label for="exampleInputPassword1" class="form-label">Password</label>
+    <input type="password" class="form-control" name='password'><br/><br/>
+  </div> -->
+ <br/><br/>
+  <button type="submit" class="btn btn-secondary">Check Out</button>
+       <br/><br/><br/><br/>
+</form>
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="page-banner">
+    <div class="container">
+        <h1>Custom Order</h1>
+        <p>Create your unique piece of jewelry</p>
+    </div>
+</section>
+
+<section class="custom-order-form">
+    <div class="container">
+        <div class="form-intro">
+            <h2>Design Your Dream Jewelry</h2>
+            <p>Fill out this form to request a custom piece. Our artisans will review your request and contact you within 2 business days to discuss your design and provide a quote.</p>
+            <div class="form-tips">
+                <h3>Tips for Best Results:</h3>
+                <ul>
+                    <li>Be as specific as possible about your design</li>
+                    <li>Include measurements (neck size, wrist size, etc.)</li>
+                    <li>Upload reference images if available</li>
+                    <li>Specify any material preferences</li>
+                    <li>Note any important deadlines</li>
+                </ul>
+            </div>
+        </div>
+        
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-section">
+                <h3>Your Information</h3>
+                <div class="form-group">
+                    <label for="name">Full Name *</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email *</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone">
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Order Details</h3>
+                <div class="form-group">
+                    <label for="jewelry-type">Type of Jewelry *</label>
+                    <select id="jewelry-type" name="jewelry_type" required>
+                        <option value="">Select an option</option>
+                        <option value="necklace">Necklace</option>
+                        <option value="waist-beads">Waist Beads</option>
+                        <option value="bracelet">Bracelet</option>
+                        <option value="anklet">Anklet</option>
+                        <option value="earrings">Earrings</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="design-description">Design Description *</label>
+                    <textarea id="design-description" name="design_description" rows="5" required placeholder="Describe your design in detail including colors, materials, size, etc."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="measurements">Measurements (if applicable)</label>
+                    <input type="text" id="measurements" name="measurements" placeholder="e.g., Neck size: 16 inches, Wrist size: 6.5 inches">
+                </div>
+                <div class="form-group">
+                    <label for="material-preference">Material Preference</label>
+                    <input type="text" id="material-preference" name="material_preference" placeholder="e.g., Glass beads, gold accents, etc.">
+                </div>
+                <div class="form-group">
+                    <label for="deadline">Desired Completion Date</label>
+                    <input type="date" id="deadline" name="deadline">
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Reference Images</h3>
+                <div class="form-group">
+                    <label for="reference-images">Upload Reference Images</label>
+                    <input type="file" id="reference-images" name="reference_images" multiple accept="image/*">
+                    <p class="help-text">You can upload multiple images (Max 5MB each)</p>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Budget & Special Requests</h3>
+                <div class="form-group">
+                    <label for="budget-range">Budget Range</label>
+                    <select id="budget-range" name="budget_range">
+                        <option value="">Select an option</option>
+                        <option value="under-10000">Under ₦10000</option>
+                        <option value="10000-20000">₦10000 - ₦20000</option>
+                        <option value="20000-30000">₦20000 - ₦30000</option>
+                        <option value="30000-50000">₦30000 - ₦50000</option>
+                        <option value="50000-plus">₦50000+</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="special-requests">Special Requests</label>
+                    <textarea id="special-requests" name="special_requests" rows="3" placeholder="Any other special requests or considerations"></textarea>
+                </div>
+            </div>
+
+            <div class="form-submit">
+                <button type="submit" class="btn">Submit Custom Order Request</button>
+                <p class="form-note">By submitting this form, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>. We'll contact you to confirm details before starting your order.</p>
+            </div>
+        </form>
+    </div>
+</section>
+
+<section class="process-overview deep-teal-bg">
+    <div class="container">
+        <h2>Our Custom Order Process</h2>
+        <div class="process-steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3>Submit Request</h3>
+                <p>Fill out this form with your design ideas</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3>Design Consultation</h3>
+                <p>We'll contact you to discuss details</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3>Approval & Payment</h3>
+                <p>Review and approve final design</p>
+            </div>
+            <div class="step">
+                <div class="step-number">4</div>
+                <h3>Handcrafting</h3>
+                <p>Our artisans create your piece</p>
+            </div>
+            <div class="step">
+                <div class="step-number">5</div>
+                <h3>Delivery</h3>
+                <p>Your custom piece is shipped</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

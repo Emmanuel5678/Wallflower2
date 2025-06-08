@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/slider.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="hero-slider">
+    <div class="slider-container">
+        <div class="slide active">
+            <img src="https://images.unsplash.com/photo-1605100804763-247f67b3557e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Bead Jewelry Collection">
+            <div class="slide-content">
+                <h2>Exquisite Handmade Bead Jewelry</h2>
+                <p>Discover our unique collection crafted with passion</p>
+                <a href="{% url 'wallflower:services' %}" class="btn">Explore Collections</a>
+            </div>
+        </div>
+        <div class="slide">
+             <img src="https://images.unsplash.com/photo-1602173574767-37ac01994b2a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Waist Beads">
+            <div class="slide-content">
+                <h2>Elegant Waist Beads</h2>
+                <p>Custom designs for every occasion</p>
+                <a href="{% url 'wallflower:shop' %}" class="btn">Shop Now</a>
+            </div>
+        </div>
+        <div class="slider-nav">
+            <button class="prev"><i class="fas fa-chevron-left"></i></button>
+            <button class="next"><i class="fas fa-chevron-right"></i></button>
+        </div>
+        <div class="slider-dots"></div>
+    </div>
+</section>
+
+<section class="featured">
+    <div class="container">
+        <h2>Our Featured Collections</h2>
+        <div class="collections-grid">
+            {% for product in products %}
+            <div class="collection-item">
+                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                <h3>{{ product.name }}</h3>
+                <a href="{% url 'wallflower:shop' %}?category={{ product.category }}" class="btn">View Collection</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="custom-orders deep-teal-bg">
+    <div class="container">
+        <h2>Custom Handmade Jewelry</h2>
+        <p>We create bespoke bead jewelry tailored to your preferences</p>
+        <a href="{% url 'wallflower:custom_order' %}" class="btn btn-light">Request Custom Order</a>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/slider.js' %}"></script>
+{% endblock %}

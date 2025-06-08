@@ -1,0 +1,102 @@
+.payment-status {
+    padding: 80px 0;
+    background-color: #f9f9f9;
+    min-height: 100vh;
+}
+
+.payment-card {
+    max-width: 600px;
+    margin: 0 auto;
+    background: white;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+    text-align: center;
+}
+
+.payment-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 25px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.payment-card.success .payment-icon {
+    background-color: #e8f5e9;
+    color: #4caf50;
+}
+
+.payment-card.failed .payment-icon {
+    background-color: #ffebee;
+    color: #f44336;
+}
+
+.payment-icon svg {
+    width: 40px;
+    height: 40px;
+}
+
+.payment-card h2 {
+    font-size: 28px;
+    margin-bottom: 15px;
+    color: #2a2a2a;
+}
+
+.payment-card p {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+.reference {
+    background: #f5f5f5;
+    padding: 8px 15px;
+    border-radius: 4px;
+    display: inline-block;
+    font-family: monospace;
+    margin-bottom: 30px;
+}
+
+.order-details, .troubleshooting {
+    text-align: left;
+    margin: 30px 0;
+    padding: 20px;
+    background: #fafafa;
+    border-radius: 6px;
+}
+
+.order-details h3, .troubleshooting h3 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.order-details ul, .troubleshooting ul {
+    padding-left: 20px;
+    color: #555;
+}
+
+.order-details li, .troubleshooting li {
+    margin-bottom: 8px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid #8b5a2b;
+    color: #8b5a2b;
+}
+
+.btn-outline:hover {
+    background: #f5f5f5;
+}

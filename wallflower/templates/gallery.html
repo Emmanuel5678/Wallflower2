@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/gallery.css' %}">
+{% endblock %}
+
+{% block content %}
+    <main>
+        <section class="page-banner">
+            <div class="container">
+                <h1>Our Gallery</h1>
+                <p>Explore our collection of handcrafted bead jewelry</p>
+            </div>
+        </section>
+
+        <section class="gallery-filters">
+            <div class="container">
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="necklace">Neck Beads</button>
+                    <button class="filter-btn" data-filter="waist">Waist Beads</button>
+                    <button class="filter-btn" data-filter="leg">Leg Beads</button>
+                    <button class="filter-btn" data-filter="custom">Custom Designs</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="gallery-grid">
+            <div class="container">
+                <div class="grid">
+                    <div class="gallery-item necklace">
+                        <img src="https://images.unsplash.com/photo-1603974372036-a6dae7e4263f?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Neck Beads 1">
+                        <div class="overlay">
+                            <h3>Sunset Strand</h3>
+                            <p>Handwoven glass beads with gold accents</p>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item necklace">
+                        <img src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Neck Beads 2">
+                        <div class="overlay">
+                            <h3>Ocean Wave</h3>
+                            <p>Mixed stone beads with silver findings</p>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item waist">
+                        <img src="https://images.unsplash.com/photo-1605100804763-247f67b3557e?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Waist Beads 1">
+                        <div class="overlay">
+                            <h3>Golden Sands</h3>
+                            <p>Adjustable waist beads with glass and wood</p>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item waist">
+                        <img src="https://images.unsplash.com/photo-1608042314451-ae1f6bf12e05?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Waist Beads 2">
+                        <div class="overlay">
+                            <h3>Midnight Sky</h3>
+                            <p>Dark blue and silver waist beads</p>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item leg">
+                        <img src="https://images.unsplash.com/photo-1605106715994-18d3fecffb98?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Leg Beads 1">
+                        <div class="overlay">
+                            <h3>Desert Bloom</h3>
+                            <p>Earth-toned leg beads with subtle jingles</p>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item leg">
+                        <img src="https://images.unsplash.com/photo-1602173574767-37ac01994b2a?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Leg Beads 2">
+                        <div class="overlay">
+                            <h3>Sea Foam</h3>
+                            <p>Turquoise and silver anklet set</p>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item custom">
+                        <img src="https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Custom Design 1">
+                        <div class="overlay">
+                            <h3>Bridal Set</h3>
+                            <p>Custom pearl and crystal wedding jewelry</p>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item custom">
+                        <img src="https://images.unsplash.com/photo-1602173574767-37ac01994b2a?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Custom Design 2">
+                        <div class="overlay">
+                            <h3>Festival Collection</h3>
+                            <p>Vibrant multi-strand festival set</p>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item necklace">
+                        <img src="https://images.unsplash.com/photo-1603974269447-b1a71a80a3a1?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Neck Beads 3">
+                        <div class="overlay">
+                            <h3>Golden Horizon</h3>
+                            <p>Gold-plated beads with amber accents</p>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item waist">
+                        <img src="https://images.unsplash.com/photo-1602173574767-37ac01994b2a?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Waist Beads 3">
+                        <div class="overlay">
+                            <h3>Spring Blossom</h3>
+                            <p>Pastel-colored waist beads with floral charms</p>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item leg">
+                        <img src="https://images.unsplash.com/photo-1605106715994-18d3fecffb98?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Leg Beads 3">
+                        <div class="overlay">
+                            <h3>Moonlight Dancer</h3>
+                            <p>Silver-toned leg beads with moon charms</p>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item custom">
+                        <img src="https://images.unsplash.com/photo-1602173574767-37ac01994b2a?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Custom Design 3">
+                        <div class="overlay">
+                            <h3>Anniversary Set</h3>
+                            <p>Personalized anniversary jewelry set</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="gallery-cta deep-teal-bg">
+            <div class="container">
+                <h2>Inspired by Our Work?</h2>
+                <p>Let's create something beautiful together</p>
+                <a href="contact.html" class="btn btn-light">Start Your Custom Order</a>
+            </div>
+        </section>
+    </main>
+
+    {% endblock %}
+    
+    
+{% block extra_js %}
+<script src="{% static 'js/gallery.js' %}"></script>
+{% endblock %}

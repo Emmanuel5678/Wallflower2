@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/shop.css' %}">
+<style>
+    /* Checkout Form Styles */
+    .checkout-email-input {
+        width: 100%;
+        padding: 12px 15px;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+
+    .btn-checkout {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        background-color: #8b5a2b;
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .btn-checkout:hover {
+        background-color: #6d451f;
+    }
+
+    .btn-checkout:disabled {
+        background-color: #cccccc;
+        cursor: not-allowed;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 500;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="page-banner">
+    <div class="container">
+        <h1>Our Shop</h1>
+        <p>Handcrafted bead jewelry ready to ship</p>
+    </div>
+</section>
+
+<section class="shop-content">
+    <div class="container">
+        <div class="shop-filters">
+            <form method="get" action="{% url 'wallflower:shop' %}">
+                <div class="filter-group">
+                    <label for="category">Category:</label>
+                    <select id="category" name="category">
+                        <option value="">All Categories</option>
+                        {% for category in categories %}
+                        <option value="{{ category.0 }}" {% if selected_category == category.0 %}selected{% endif %}>{{ category.1 }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="price">Price Range:</label>
+                    <select id="price" name="price">
+                        <option value="">All Prices</option>
+                        <option value="under-10000" {% if selected_price == 'under-10000' %}selected{% endif %}>Under ₦10000</option>
+                        <option value="10000-20000" {% if selected_price == '10000-20000' %}selected{% endif %}>₦10000 - ₦20000</option>
+                        <option value="20000-30000" {% if selected_price == '20000-30000' %}selected{% endif %}>₦20000 - ₦30000</option>
+                        <option value="30000-plus" {% if selected_price == '30000-plus' %}selected{% endif %}>₦30000+</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="sort">Sort By:</label>
+                    <select id="sort" name="sort">
+                        <option value="featured" {% if selected_sort == 'featured' %}selected{% endif %}>Featured</option>
+                        <option value="price-low" {% if selected_sort == 'price-low' %}selected{% endif %}>Price: Low to High</option>
+                        <option value="price-high" {% if selected_sort == 'price-high' %}selected{% endif %}>Price: High to Low</option>
+                        <option value="newest" {% if selected_sort == 'newest' %}selected{% endif %}>Newest Arrivals</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn filter-btn">Apply Filters</button>
+            </form>
+        </div>
+
+        <div class="products-grid">
+            {% for product in products %}
+            <div class="product-card" data-category="{{ product.category }}" data-price="{{ product.price }}">
+                <div class="product-image">
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                    {% if product.is_new %}
+                    <div class="product-badge new">New</div>
+                    {% elif product.is_bestseller %}
+                    <div class="product-badge bestseller">Bestseller</div>
+                    {% elif product.on_sale %}
+                    <div class="product-badge sale">Sale</div>
+                    {% endif %}
+                </div>
+                <div class="product-details">
+                    <h3>{{ product.name }}</h3>
+                    <p class="product-description">{{ product.short_description }}</p>
+                    <div class="product-price">
+                        {% if product.on_sale %}
+                        <span class="original-price">₦{{ product.original_price }}</span>
+                        <span class="sale-price">₦{{ product.price }}</span>
+                        {% else %}
+                        ₦{{ product.price }}
+                        {% endif %}
+                    </div>
+                    <div class="product-actions">
+                        <button class="btn quick-view" data-product="{{ product.id }}">Quick View</button>
+                        <button class="btn btn-add-to-cart" 
+                                data-product="{{ product.id }}" 
+                                data-name="{{ product.name }}"
+                                data-price="{{ product.price }}"
+                                data-image="{{ product.image.url }}">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="no-products">
+                <p>No products found matching your criteria.</p>
+                <a href="{% url 'wallflower:shop' %}" class="btn">Reset Filters</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Shopping Cart Sidebar -->
+<div class="cart-sidebar">
+    <div class="cart-header">
+        <h3>Your Cart</h3>
+        <button class="close-cart">&times;</button>
+    </div>
+    <div class="cart-items">
+        <div class="empty-cart-message">
+            <p>Your cart is empty</p>
+            <a href="{% url 'wallflower:shop' %}" class="btn">Continue Shopping</a>
+        </div>
+    </div>
+   <div class="cart-summary">
+    <div class="cart-totals">
+        <div class="subtotal">
+            <span>Subtotal:</span>
+            <span class="subtotal-amount">₦0.00</span>
+        </div>
+        <div class="shipping">
+            <span>Shipping:</span>
+            <span class="shipping-amount">Calculated at checkout</span>
+        </div>
+        <div class="total">
+            <span>Total:</span>
+            <span class="total-amount">₦0.00</span>
+        </div>
+    </div>
+    <form id="checkout-form" method="post" action="{% url 'wallflower:initiate_payment' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="checkout-email">Email Address</label>
+            <input type="email" id="checkout-email" name="email" required 
+                   placeholder="Your email address" class="checkout-email-input">
+        </div>
+        <input type="hidden" name="cart_data" id="cart-data">
+        <button type="submit" class="btn btn-checkout" id="checkout-button">
+            Proceed to Paystack Checkout
+        </button>
+    </form>
+</div>
+</div>
+<div class="cart-overlay"></div>
+
+<!-- Quick View Modal -->
+<div class="quick-view-modal">
+    <div class="modal-content">
+        <button class="close-modal">&times;</button>
+        <div class="modal-product-details">
+            <!-- Content loaded dynamically -->
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/shop.js' %}"></script>
+{% endblock %}

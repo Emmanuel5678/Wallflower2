@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+    <main>
+        <section class="page-banner">
+            <div class="container">
+                <h1>Our Story</h1>
+                <p>Discover the passion behind Wallflower Jewels</p>
+            </div>
+        </section>
+
+        <section class="about-content">
+            <div class="container">
+                <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1605106715994-18d3fecffb98?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Our Workshop">
+                </div>
+                <div class="about-text">
+                    <h2>Handcrafted with Love</h2>
+                    <p>Founded in 2015, Wallflower Jewels began as a small passion project in a home workshop. What started as creating simple bead jewelry for friends and family has grown into a thriving business known for its unique designs and quality craftsmanship.</p>
+                    <p>Each piece in our collection is meticulously handcrafted by our team of skilled artisans. We source high-quality beads from ethical suppliers around the world to bring you jewelry that's not only beautiful but also responsibly made.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="team deep-teal-bg">
+            <div class="container">
+                <h2>Meet Our Artisans</h2>
+                <div class="team-grid">
+                    <div class="team-member">
+                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Lead Designer">
+                        <h3>Sarah Johnson</h3>
+                        <p>Lead Designer & Founder</p>
+                    </div>
+                    <div class="team-member">
+                        <img src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Bead Specialist">
+                        <h3>Michael Chen</h3>
+                        <p>Bead Specialist</p>
+                    </div>
+                    <div class="team-member">
+                        <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Quality Control">
+                        <h3>Elena Rodriguez</h3>
+                        <p>Quality Control</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="values">
+            <div class="container">
+                <h2>Our Core Values</h2>
+                <div class="values-grid">
+                    <div class="value-item">
+                        <i class="fas fa-gem"></i>
+                        <h3>Quality Craftsmanship</h3>
+                        <p>Every piece undergoes rigorous quality checks to ensure durability and beauty.</p>
+                    </div>
+                    <div class="value-item">
+                        <i class="fas fa-leaf"></i>
+                        <h3>Ethical Sourcing</h3>
+                        <p>We partner with suppliers who share our commitment to ethical practices.</p>
+                    </div>
+                    <div class="value-item">
+                        <i class="fas fa-heart"></i>
+                        <h3>Customer Satisfaction</h3>
+                        <p>Your happiness is our priority. We stand behind every piece we create.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    {% endblock %}
