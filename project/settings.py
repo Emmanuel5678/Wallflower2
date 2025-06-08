@@ -15,6 +15,9 @@ from . info import *
 import os
 from dotenv import load_dotenv
 
+
+env_path = Path('.') / '.env'
+load_dotenv(dotenv_path=env_path)
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 
 # Disable Django's file locking (Termux doesn't support fcntl.flock)
