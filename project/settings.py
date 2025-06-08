@@ -13,8 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 from . info import *
 import os
-from dotenv import load_dotenv
-
+from decouple import config
 
 env_path = Path('.') / '.env'
 load_dotenv(dotenv_path=env_path)
@@ -41,13 +40,12 @@ EMAIL_PORT = EMAIL_PORT
 # SECURITY WARNING: keep the secret key used in production secret!
 
 
-load_dotenv()
 
-SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = config('SECRET_KEY')
 #DEFAULT_FILE_STORAGE = 'wallflower.storage.NoLockFileSystemStorage'
 
 
-PAYSTACK_SECRET_KEY =  os.getenv('PAYSTACK_SECRET_KEY')
+PAYSTACK_SECRET_KEY = config('PAYSTACK_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
