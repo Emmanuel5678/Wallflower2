@@ -4,44 +4,53 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/shop.css' %}">
 <style>
-    /* Checkout Form Styles */
-    .checkout-email-input {
-        width: 100%;
-        padding: 12px 15px;
-        margin-bottom: 15px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        font-size: 16px;
+    /* Additional styles to match your CSS */
+    .page-banner {
+        background-color: var(--deep-teal);
+        color: white;
+        padding: 60px 0;
+        text-align: center;
     }
-
-    .btn-checkout {
-        width: 100%;
-        padding: 12px;
-        font-size: 16px;
-        background-color: #8b5a2b;
+    
+    .page-banner h1 {
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+    }
+    
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 15px;
+    }
+    
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        border-radius: 4px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    /* Ensure all buttons match your style */
+    .btn-primary {
+        background-color: var(--deep-teal);
         color: white;
         border: none;
-        cursor: pointer;
-        transition: background-color 0.3s;
     }
-
-    .btn-checkout:hover {
-        background-color: #6d451f;
+    
+    .btn-primary:hover {
+        background-color: var(--soft-teal);
     }
-
-    .btn-checkout:disabled {
-        background-color: #cccccc;
-        cursor: not-allowed;
+    
+    .btn-secondary {
+        background-color: var(--ivory);
+        color: var(--deep-teal);
+        border: 1px solid var(--deep-teal);
     }
-
-    .form-group {
-        margin-bottom: 15px;
-    }
-
-    .form-group label {
-        display: block;
-        margin-bottom: 5px;
-        font-weight: 500;
+    
+    .btn-secondary:hover {
+        background-color: white;
     }
 </style>
 {% endblock %}
@@ -184,16 +193,12 @@
 {% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Enhanced price parsing function
+    // Price parsing function
     function parsePrice(price) {
         if (!price) return 0;
-        
-        // Handle Django price objects
         if (typeof price === 'object' && price !== null) {
             price = price.amount || price.original_amount || 0;
         }
-        
-        // Convert string to number, removing any non-numeric characters except decimal point
         const num = parseFloat(price.toString().replace(/[^0-9.]/g, ''));
         return isNaN(num) ? 0 : num;
     }
@@ -215,7 +220,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const savedCart = localStorage.getItem('wallflowerCart');
             if (savedCart) {
                 cart = JSON.parse(savedCart);
-                // Validate cart items
                 cart = cart.filter(item => item && !isNaN(parsePrice(item.price)));
                 updateCartUI();
             }
@@ -251,14 +255,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Quick view functionality
-    document.querySelectorAll('.quick-view').forEach(button => {
-        button.addEventListener('click', function() {
-            const productId = this.getAttribute('data-product');
-            openQuickView(productId);
-        });
-    });
-
     // Cart management functions
     function addToCart(product) {
         if (isNaN(product.price)) {
@@ -273,12 +269,6 @@ document.addEventListener('DOMContentLoaded', function() {
             cart.push(product);
         }
         saveCart();
-    }
-
-    function removeFromCart(productId) {
-        cart = cart.filter(item => item.id !== productId);
-        saveCart();
-        updateCartUI();
     }
 
     function updateCartUI() {
@@ -358,6 +348,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    function removeFromCart(productId) {
+        cart = cart.filter(item => item.id !== productId);
+        saveCart();
+        updateCartUI();
+    }
+
     // Cart visibility functions
     function openCart() {
         cartSidebar.classList.add('active');
@@ -371,7 +367,14 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.style.overflow = '';
     }
 
-    // Quick view modal functions
+    // Quick view functionality
+    document.querySelectorAll('.quick-view').forEach(button => {
+        button.addEventListener('click', function() {
+            const productId = this.getAttribute('data-product');
+            openQuickView(productId);
+        });
+    });
+
     function openQuickView(productId) {
         const productCard = document.querySelector(`[data-product="${productId}"]`)?.closest('.product-card');
         if (!productCard) return;
@@ -449,7 +452,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.style.overflow = '';
     }
 
-    // Close cart handlers
+    // Close handlers
     document.querySelector('.close-cart')?.addEventListener('click', closeCart);
     cartOverlay?.addEventListener('click', closeCart);
     document.querySelector('.close-modal')?.addEventListener('click', closeQuickView);
@@ -465,14 +468,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Update checkout button with enriched cart data
+    // Checkout button handler
     checkoutButton?.addEventListener('click', function(e) {
         if (cart.length === 0) {
             e.preventDefault();
             return;
         }
         
-        // Store enriched cart data in sessionStorage
+        // Store enriched cart data
         const enrichedCart = cart.map(item => ({
             id: item.id,
             name: item.name,
