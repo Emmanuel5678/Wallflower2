@@ -3,6 +3,47 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/shop.css' %}">
+<style>
+    /* Checkout Form Styles */
+    .checkout-email-input {
+        width: 100%;
+        padding: 12px 15px;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+
+    .btn-checkout {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        background-color: #8b5a2b;
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .btn-checkout:hover {
+        background-color: #6d451f;
+    }
+
+    .btn-checkout:disabled {
+        background-color: #cccccc;
+        cursor: not-allowed;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 500;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
