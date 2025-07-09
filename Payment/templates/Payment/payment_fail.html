@@ -1,0 +1,36 @@
+{% extends 'wallflower:base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/payment.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="payment-status">
+    <div class="container">
+        <div class="payment-card failed">
+            <div class="payment-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                </svg>
+            </div>
+            <h2>Payment Failed</h2>
+            <p>We couldn't process your payment. Please try again or use a different payment method.</p>
+            
+            <div class="troubleshooting">
+                <h3>What you can do:</h3>
+                <ul>
+                    <li>Check your card details and try again</li>
+                    <li>Ensure you have sufficient funds</li>
+                    <li>Contact your bank if you suspect any issues</li>
+                </ul>
+            </div>
+            
+            <div class="action-buttons">
+                <a href="{% url 'wallflower:shop' %}" class="btn">Try Again</a>
+                <a href="{% url 'wallflower:contact' %}" class="btn btn-outline">Contact Support</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/checkout.css' %}">
+<style>
+    .checkout-container {
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 20px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    
+    .checkout-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    
+    .checkout-section {
+        margin-bottom: 30px;
+    }
+    
+    .checkout-title {
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+        font-size: 18px;
+    }
+    
+    .form-group {
+        margin-bottom: 15px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 500;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+    
+    .btn-checkout {
+        width: 100%;
+        padding: 12px;
+        background-color: #8b5a2b;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    
+    .btn-checkout:hover {
+        background-color: #6d451f;
+    }
+    
+    .order-summary {
+        background: #f9f9f9;
+        padding: 20px;
+        border-radius: 4px;
+    }
+    
+    .order-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .order-total {
+        font-weight: bold;
+        font-size: 18px;
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid #ddd;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="checkout-container">
+    <div class="checkout-header">
+        <h1>Checkout</h1>
+        <p>Complete your purchase</p>
+    </div>
+    
+    <form method="post" action="{% url 'Payment:initiate_payment' %}" id="payment-form">
+        {% csrf_token %}
+        
+        <div class="checkout-section">
+            <h2 class="checkout-title">Contact Information</h2>
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" class="form-control" required>
+            </div>
+        </div>
+        
+        <div class="checkout-section">
+            <h2 class="checkout-title">Shipping Information</h2>
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="address">Shipping Address</label>
+                <textarea id="address" name="address" class="form-control" rows="3" required></textarea>
+            </div>
+        </div>
+        
+        <div class="checkout-section order-summary">
+            <h2 class="checkout-title">Order Summary</h2>
+            <div id="order-items">
+                <!-- Items will be loaded from JavaScript -->
+            </div>
+            <div class="order-total">
+                <span>Total:</span>
+                <span id="order-total-amount">₦0.00</span>
+            </div>
+        </div>
+        
+        <input type="hidden" name="cart_data" id="cart-data">
+        <button type="submit" class="btn-checkout">Proceed to Payment</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Load cart from sessionStorage
+    const savedCart = sessionStorage.getItem('checkoutCart');
+    const cart = savedCart ? JSON.parse(savedCart) : [];
+    const orderItemsContainer = document.getElementById('order-items');
+    const orderTotalAmount = document.getElementById('order-total-amount');
+    const cartDataInput = document.getElementById('cart-data');
+    const currencySymbol = '₦';
+    
+    if (cart.length === 0) {
+        // If cart is empty, redirect back to shop
+        window.location.href = "{% url 'wallflower:shop' %}";
+        return;
+    }
+    
+    // Display order items
+    let subtotal = 0;
+    orderItemsContainer.innerHTML = '';
+    
+    cart.forEach(item => {
+        const itemTotal = (item.price || 0) * item.quantity;
+        subtotal += itemTotal;
+        
+        const itemElement = document.createElement('div');
+        itemElement.className = 'order-item';
+        itemElement.innerHTML = `
+            <span>${item.name} × ${item.quantity}</span>
+            <span>${currencySymbol}${itemTotal.toFixed(2)}</span>
+        `;
+        orderItemsContainer.appendChild(itemElement);
+    });
+    
+    orderTotalAmount.textContent = `${currencySymbol}${subtotal.toFixed(2)}`;
+    
+    // Set cart data for form submission
+    cartDataInput.value = JSON.stringify(
+        cart.map(item => ({
+            id: item.id,
+            price: item.price,
+            quantity: item.quantity
+        }))
+    );
+});
+</script>
+{% endblock %}

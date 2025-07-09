@@ -20,6 +20,7 @@ class PaymentTransaction(models.Model):
     name = models.CharField(max_length=15, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, default='pending')
+    cart_data = models.JSONField(default=list)
 
     def __str__(self):
         return f"{self.email} - {self.amount}"

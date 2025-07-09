@@ -1,121 +1,128 @@
-
-
-# Create your views here.
-
-
-
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 import requests
 from django.conf import settings
 from django.contrib import messages
 from .models import PaymentTransaction
 from wallflower.models import Product
 from django.views.decorators.csrf import csrf_exempt
-from django.http import JsonResponse
 from django.urls import reverse
+import json
 
-def initiate_payment(request, pk):
-    product = get_object_or_404(Product, id=pk)
-    
+def initiate_payment(request):
     if request.method == 'POST':
-        email = request.POST.get('email')
-        amount_str = request.POST.get('amount')
-        address = request.POST.get('address')
-        phone = request.POST.get('phone')
-        name = request.POST.get('name')
-
-        # Validate amount
-        if not amount_str:
-            messages.error(request, 'Amount is required')
-            return render(request, 'Payment/payment_form.html', {'product': product})
-        
         try:
-            amount = float(amount_str)
-        except ValueError:
-            messages.error(request, 'Invalid amount format')
-            return render(request, 'Payment/payment_form.html', {'product': product})
+            cart_data = json.loads(request.POST.get('cart_data', '[]'))
+            email = request.POST.get('email')
+            address = request.POST.get('address')
+            phone = request.POST.get('phone')
+            name = request.POST.get('name')
 
-        if amount <= 0:
-            messages.error(request, 'Amount must be positive')
-            return render(request, 'Payment/payment_form.html', {'product': product})
+            if not cart_data:
+                messages.error(request, 'Your cart is empty')
+                return redirect('wallflower:shop')
 
-        # Paystack API endpoint
-        url = 'https://api.paystack.co/transaction/initialize'
-        headers = {
-            'Authorization': f'Bearer {settings.PAYSTACK_SECRET_KEY}',
-            'Content-Type': 'application/json',
-        }
-        data = {
-            'email': email,
-            'amount': int(amount * 100),  # Convert to kobo
-            'callback_url': request.build_absolute_uri(reverse('Payment:payment_callback')),
-            'metadata': {
-                'address': address,
-                'phone': phone,
-                'product_id': product.id,
-                'name' : name # Include product ID in metadata
+            # Get product names for each item in cart
+            enriched_cart = []
+            total_amount = 0
+            for item in cart_data:
+                product = Product.objects.get(id=item['id'])
+                enriched_item = {
+                    'id': item['id'],
+                    'name': product.name,
+                    'price': float(item['price']),
+                    'quantity': item['quantity'],
+                    'image': product.image.url if product.image else ''
+                }
+                enriched_cart.append(enriched_item)
+                total_amount += enriched_item['price'] * enriched_item['quantity']
+
+            url = 'https://api.paystack.co/transaction/initialize'
+            headers = {
+                'Authorization': f'Bearer {settings.PAYSTACK_SECRET_KEY}',
+                'Content-Type': 'application/json',
             }
-        }
+            data = {
+                'email': email,
+                'amount': int(total_amount * 100),
+                'callback_url': request.build_absolute_uri(reverse('Payment:payment_callback')),
+                'metadata': {
+                    'address': address,
+                    'phone': phone,
+                    'cart_data': json.dumps(enriched_cart),
+                    'name': name
+                }
+            }
 
-        response = requests.post(url, headers=headers, json=data)
-        if response.status_code == 200:
+            response = requests.post(url, headers=headers, json=data)
             response_data = response.json()
-            authorization_url = response_data['data']['authorization_url']
-            reference = response_data['data']['reference']
-
-            PaymentTransaction.objects.create(
-                email=email,
-                amount=amount,
-                reference=reference,
-                address=address,
-                phone=phone,
-                product=product,
-                name = name,
-                status='initiated'
-            )
-
-            return redirect(authorization_url)
-        else:
-            error_message = response.json().get('message', 'Payment initiation failed')
-            return render(request, 'Payment/error.html', {'message': error_message})
+            
+            if response.status_code == 200:
+                PaymentTransaction.objects.create(
+                    email=email,
+                    amount=total_amount,
+                    reference=response_data['data']['reference'],
+                    address=address,
+                    phone=phone,
+                    name=name,
+                    status='initiated',
+                    cart_data=enriched_cart
+                )
+                return redirect(response_data['data']['authorization_url'])
+            
+            messages.error(request, response_data.get('message', 'Payment initiation failed'))
+            return redirect('Payment:payment_fail')
+        except Product.DoesNotExist:
+            messages.error(request, 'One or more products in your cart no longer exist')
+            return redirect('Payment:payment_fail')
+        except Exception as e:
+            messages.error(request, f'An error occurred: {str(e)}')
+            return redirect('Payment:payment_fail')
     
-    # GET request - show payment form
-    return render(request, 'Payment/payment_form.html', {
-        'product': product,
-        'default_amount': product.price, 
-        'default_name' : product.name# Pre-fill with product price
-    })
-    
-    
-    
-    
-    
-    
-    
-
+    return redirect('wallflower:shop')
 
 @csrf_exempt
 def payment_callback(request):
-    # Get reference from either GET or POST
     reference = request.GET.get('reference') or request.POST.get('reference')
     
     if reference:
-        # Verify with Paystack
-        verify_url = f'https://api.paystack.co/transaction/verify/{reference}'
-        headers = {'Authorization': f'Bearer {settings.PAYSTACK_SECRET_KEY}'}
-        
         try:
+            verify_url = f'https://api.paystack.co/transaction/verify/{reference}'
+            headers = {'Authorization': f'Bearer {settings.PAYSTACK_SECRET_KEY}'}
+            
             response = requests.get(verify_url, headers=headers)
-            if response.status_code == 200 and response.json()['data']['status'] == 'success':
-                # Update transaction status
-                transaction = PaymentTransaction.objects.get(reference=reference)
-                transaction.status = 'success'
-                transaction.save()
+            if response.status_code == 200:
+                response_data = response.json()
+                if response_data['data']['status'] == 'success':
+                    transaction = PaymentTransaction.objects.get(reference=reference)
+                    transaction.status = 'success'
+                    transaction.save()
+                    
+                    # Clear the cart
+                    if 'checkoutCart' in request.session:
+                        del request.session['checkoutCart']
+                    
+                    return redirect('Payment:payment_success')
                 
-                # Redirect to shop with success message
-                return redirect(reverse('wallflower:shop') + '?payment=success')
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"Callback error: {str(e)}")
     
-    # If anything fails, redirect back with error
-    return redirect(reverse('wallflower:shop') + '?payment=error')
+    return redirect('Payment:payment_fail')
+
+def payment_success(request):
+    return render(request, 'Payment/payment_success.html')
+
+def payment_fail(request):
+    return render(request, 'Payment/payment_fail.html')
+    
+    
+    
+def checkout(request):
+    # This view will render the checkout page
+    return render(request, 'Payment/checkout.html')
+    
+    
+    
+    
+    
+    
+    

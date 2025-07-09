@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/payment.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="payment-status">
+    <div class="container">
+        <div class="payment-card success">
+            <div class="payment-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+                </svg>
+            </div>
+            <h2>Payment Successful!</h2>
+            <p>Thank you for your order. Your payment of <strong>₦{{ amount }}</strong> was completed successfully.</p>
+            <p class="reference">Reference: {{ reference }}</p>
+            
+            <div class="order-details">
+                <h3>What's Next?</h3>
+                <ul>
+                    <li>You'll receive an order confirmation email shortly</li>
+                    <li>We'll notify you when your order ships</li>
+                    <li>Estimated delivery: 3-5 business days</li>
+                </ul>
+            </div>
+            
+            <div class="action-buttons">
+                <a href="{% url 'wallflower:shop' %}" class="btn">Continue Shopping</a>
+                <a href="{% url 'wallflower:home' %}" class="btn btn-outline">Back to Home</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
